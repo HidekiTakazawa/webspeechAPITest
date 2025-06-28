@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h1>Web Speech API 音声出力テスト</h1>
+
+  <div>
+    <label for="voiceSelect">声の種類を選択:</label>
+    <select id="voiceSelect"></select>
+  </div>
+
+  <div>
+    <label for="textToSpeak">読み上げるテキスト:</label>
+    <input type="text" id="textToSpeak" value="こんにちは、世界！">
+  </div>
+
+  <button id="speakButton" onclick="speak()">読み上げ</button>
+  <!-- <button id="stopButton" onclick="stop()" disabled>停止</button> -->
+
+  <script>
+    const synth = window.speechSynthesis;
+    const voiceSelect = document.getElementById('voiceSelect');
+    const speakButton = document.getElementById('speakButton');
+   
+    let voices = [];
+
+   
+    function populateVoiceList() {
+      voices = synth.getVoices();
+      voiceSelect.innerHTML = ''; 
+
+      voices.forEach(voice => {
+        const option = document.createElement('option');
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.value = voice.name;
+        voiceSelect.appendChild(option);
+      });
+    }
+
+    
+    populateVoiceList();
+    if (synth.onvoiceschanged !== undefined) {
+      synth.onvoiceschanged = populateVoiceList;
+    }
+
+    function speak() {
+      
+      const text = document.getElementById('textToSpeak').value;
+      if (!text.trim()) { // Check for empty or whitespace-only text
+        console.warn('No text to speak.');
+        // setButtonState(false); // Ensure buttons are reset if no text is provided
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      
+      const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      } else {
+        console.warn('Selected voice not found. Using default.');
+      }
+      synth.speak(utterance);
+    }
+
+    
+  </script>
+</body>
+
+</html>
