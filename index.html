@@ -47,9 +47,7 @@
 
     
     populateVoiceList();
-    if (synth.onvoiceschanged !== undefined) {
-      synth.onvoiceschanged = populateVoiceList;
-    }
+    synth.addEventListener('voiceschanged', populateVoiceList);
 
     function speak() {
       
