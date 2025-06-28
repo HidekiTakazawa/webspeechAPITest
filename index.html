@@ -63,6 +63,7 @@
       
       const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
       if (selectedVoice) {
+        utterance.lang = selectedVoice.lang;
         utterance.voice = selectedVoice;
       } else {
         console.warn('Selected voice not found. Using default.');
